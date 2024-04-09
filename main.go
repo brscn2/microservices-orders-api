@@ -1,8 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"context"
+	"fmt"
+	"os"
+	"os/signal"
 
 	"github.com/brscn2/orders-api/application"
 )
@@ -10,9 +12,13 @@ import (
 func main() {
 	app := application.New()
 
-	err := app.Start(context.TODO())
+	// ONLY USE context.Background() WHEN DERIVING A CONTEXT
+	// cancel derived context and child contexts, call it upon exit
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
+	err := app.Start(ctx)
 	if err != nil {
 		fmt.Println("failed to start app:", err)
 	}
 }
-
