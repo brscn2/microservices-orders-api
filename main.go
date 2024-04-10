@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	app := application.New()
+	app := application.New(application.LoadConfig())
 
 	// ONLY USE context.Background() WHEN DERIVING A CONTEXT
 	// cancel derived context and child contexts, call it upon exit
