@@ -79,7 +79,6 @@ func (r *RedisRepo) DeleteById(ctx context.Context, id uint64) error {
 
 	err := txn.Del(ctx, key).Err()
 	if errors.Is(err, redis.Nil) {
-		t
 		txn.Discard()
 		return ErrNotExist
 	} else if err != nil {
@@ -87,7 +86,7 @@ func (r *RedisRepo) DeleteById(ctx context.Context, id uint64) error {
 		return fmt.Errorf("get order: %w", err)
 	}
 
-	if err, _ := txn.SRem(ctx, "orders", key); err != nil {
+	if err := txn.SRem(ctx, "orders", key).Err(); err != nil {
 		txn.Discard()
 		return fmt.Errorf("failed to remove from orders set: %w", err)
 	}
